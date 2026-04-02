@@ -1,0 +1,58 @@
+class Solution {
+    public boolean isMatch(String s, String p) {
+        return dfs(s, 0, p, 0);
+    }
+
+    private boolean dfs(String s, int sIndex, String p, int pIndex) {
+        System.out.println("sIndex: " + sIndex + " pIndex " + pIndex);
+        if (sIndex >= s.length() && pIndex >= p.length()) {
+            return true;
+        }
+
+        if (pIndex >= p.length()) {
+            return false;
+        }
+
+        // edge case where s is done
+        // but we could have something like a* remaining in p, which is valid since it's 0 times so we need to continue
+        if (sIndex >= s.length()) {
+            if (pIndex + 1 < p.length() && p.charAt(pIndex + 1) == '*') {
+                return dfs(s, sIndex, p, pIndex + 2);
+            }
+            return false;
+        }
+
+        if (pIndex + 1 < p.length() && p.substring(pIndex, pIndex + 2).equals(".*")) {
+            // try recursing the rest of s and see if everything after .* equals the rest of s
+            while (sIndex < s.length()) {
+                if (dfs(s, sIndex + 1, p, pIndex + 2)) {
+                    return true;
+                }
+                sIndex++;
+            }
+            return false;
+        } else if (pIndex + 1 < p.length() && p.charAt(pIndex + 1) == '*') {
+            char precedingChar = p.charAt(pIndex);
+
+            // always try the 0 case 
+            if (dfs(s, sIndex, p, pIndex + 2)) {
+                return true;
+            }
+
+            // while s char is equal to preceding char, recurse with the next sIndex and see if we get a true result eventually
+            while (sIndex < s.length() && s.charAt(sIndex) == precedingChar) {
+                if (dfs(s, sIndex + 1, p, pIndex + 2)) {
+                    return true;
+                }
+                sIndex++;
+            }
+            return false;
+        } else if (p.charAt(pIndex) == '.') {
+            return dfs(s, sIndex + 1, p, pIndex + 1);
+        } else if (s.charAt(sIndex) == p.charAt(pIndex)) {
+            return dfs(s, sIndex + 1, p, pIndex + 1);
+        } else {
+            return false;
+        }
+    }
+}
