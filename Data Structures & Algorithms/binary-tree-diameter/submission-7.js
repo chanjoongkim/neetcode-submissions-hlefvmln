@@ -1,0 +1,40 @@
+/**
+ * Definition for a binary tree node.
+ * class TreeNode {
+ *     constructor(val = 0, left = null, right = null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    diameterOfBinaryTree(root) {
+        this.diameter = 0;
+
+        this.dfs(root);
+
+        return this.diameter;
+    }
+    
+    /**
+     * helper function that returns the length of the longest path accessible from the node
+     */
+    dfs(node) {
+        if (!node) {
+            return -1;
+        }
+
+        const left = this.dfs(node.left) + 1;
+        const right = this.dfs(node.right) + 1;
+
+        this.diameter = Math.max(this.diameter, left + right);
+
+        return Math.max(left, right);
+    }
+}
