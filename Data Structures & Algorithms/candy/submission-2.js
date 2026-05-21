@@ -1,0 +1,33 @@
+class Solution {
+    /**
+     * @param {number[]} ratings
+     * @return {number}
+     */
+    candy(ratings) {
+        // algorithm:
+        // initialize a candy array, all with 1 (since each child needs at least 1 candy)
+        // then iterate over the array, and increment indices where they are a higher rating value than the adjacement one?
+        // only increment if the # of candy of the higher rating is <= the adjacent lower rating child
+
+        const candies = Array(ratings.length).fill(1);
+
+        for (let j = 0; j < ratings.length; j++) {
+        for (let i = 0; i < ratings.length - 1; i++) {
+            if (ratings[i] > ratings[i + 1]) {
+                if (candies[i] <= candies[i + 1]) {
+                    candies[i] = candies[i + 1] + 1;
+                }
+            }
+            else if (ratings[i + 1] > ratings[i]) {
+                if (candies[i + 1] <= candies[i]) {
+                    candies[i + 1] = candies[i] + 1;
+                }
+            }
+        }}
+
+        console.log(ratings);
+        console.log(candies);
+
+        return candies.reduce((acc, curr) => acc + curr, 0);
+    }
+}
